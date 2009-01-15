@@ -77,7 +77,7 @@ module Caboose #:nodoc:
         end
 
         module ClassMethods
-          def find_with_published(*args)
+          def find_with_unpublished(*args)
             options = args.extract_options!
             validate_find_options(options)
             set_readonly_option!(options)
@@ -90,7 +90,7 @@ module Caboose #:nodoc:
             end
           end
 
-          def find_only_published(*args)
+          def find_only_unpublished(*args)
             options = args.extract_options!
             validate_find_options(options)
             set_readonly_option!(options)
