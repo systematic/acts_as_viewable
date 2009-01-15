@@ -2,10 +2,14 @@ module Caboose # :nodoc:
   module Acts # :nodoc:
     class HasManyThroughWithoutPublishedAssociation < ActiveRecord::Associations::HasManyThroughAssociation
       protected
-        def current_time
+        def old_current_time
           ActiveRecord::Base.default_timezone == :utc ? Time.now.utc : Time.now
         end
 
+        def current_time
+           $CURRENT_PUBLISHING_TIME || old_current_time
+        end
+        
         def construct_conditions
           return super unless @reflection.through_reflection.klass.viewable?
           table_name = @reflection.through_reflection.table_name

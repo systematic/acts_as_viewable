@@ -132,9 +132,15 @@ module Caboose #:nodoc:
           end
 
           protected
-            def current_time
+            def old_current_time
               default_timezone == :utc ? Time.now.utc : Time.now
             end
+            
+            
+            def current_time
+              $CURRENT_PUBLISHING_TIME || old_current_time
+            end 
+
 
             def with_published_scope(&block)
               with_scope({:find => { :conditions => ["#{table_name}.#{published_attribute} IS NULL OR #{table_name}.#{published_attribute} < ?", current_time] } }, :merge, &block)
@@ -155,23 +161,23 @@ module Caboose #:nodoc:
             end
         end
 
-        def destroy_without_callbacks
-          unless new_record?
-            self.class.update_all self.class.send(:sanitize_sql, ["#{self.class.published_attribute} = ?", (self.published_at = self.class.send(:current_time))]), ["#{self.class.primary_key} = ?", id]
-          end
-          freeze
-        end
+#         def destroy_without_callbacks
+#           unless new_record?
+#             self.class.update_all self.class.send(:sanitize_sql, ["#{self.class.published_attribute} = ?", (self.published_at = self.class.send(:current_time))]), ["#{self.class.primary_key} = ?", id]
+#           end
+#           freeze
+#         end
 
-        def destroy_with_callbacks!
-          return false if callback(:before_destroy) == false
-          result = destroy_without_callbacks!
-          callback(:after_destroy)
-          result
-        end
+#         def destroy_with_callbacks!
+#           return false if callback(:before_destroy) == false
+#           result = destroy_without_callbacks!
+#           callback(:after_destroy)
+#           result
+#         end
 
-        def destroy!
-          transaction { destroy_with_callbacks! }
-        end
+#         def destroy!
+#           transaction { destroy_with_callbacks! }
+#         end
 
         def published?
           !!read_attribute(:published_at)
