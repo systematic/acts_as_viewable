@@ -137,11 +137,11 @@ module Caboose #:nodoc:
             end
 
             def with_published_scope(&block)
-              with_scope({:find => { :conditions => ["#{table_name}.#{published_attribute} IS NULL OR #{table_name}.#{published_attribute} > ?", current_time] } }, :merge, &block)
+              with_scope({:find => { :conditions => ["#{table_name}.#{published_attribute} IS NULL OR #{table_name}.#{published_attribute} < ?", current_time] } }, :merge, &block)
             end
 
             def with_only_published_scope(&block)
-              with_scope({:find => { :conditions => ["#{table_name}.#{published_attribute} IS NOT NULL AND #{table_name}.#{published_attribute} <= ?", current_time] } }, :merge, &block)
+              with_scope({:find => { :conditions => ["#{table_name}.#{published_attribute} IS NOT NULL AND #{table_name}.#{published_attribute} >= ?", current_time] } }, :merge, &block)
             end
 
           private

@@ -17,7 +17,7 @@ module Caboose # :nodoc:
           quoted_current_time = @reflection.through_reflection.klass.quote_value(
             current_time,
             @reflection.through_reflection.klass.columns_hash[published_attribute.to_s])
-          conditions << "#{table_name}.#{published_attribute} IS NULL OR #{table_name}.#{published_attribute} > #{quoted_current_time}"
+          conditions << "#{table_name}.#{published_attribute} IS NULL OR #{table_name}.#{published_attribute} < #{quoted_current_time}"
 
           conditions << sql_conditions if sql_conditions
           "(" + conditions.join(') AND (') + ")"
