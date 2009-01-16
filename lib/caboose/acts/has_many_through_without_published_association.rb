@@ -5,7 +5,7 @@ module Caboose # :nodoc:
         def old_current_time
           ActiveRecord::Base.default_timezone == :utc ? Time.now.utc : Time.now
         end
-
+#superfluous
         def current_time
            $CURRENT_PUBLISHING_TIME || old_current_time
         end
